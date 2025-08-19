@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>❤</title>
+    <style>
+        body {
+            background-color: #fbd2d3;
+            font-family: "微软雅黑", sans-serif;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            min-height: 100vh;
+            margin: 0;
+            overflow: hidden;
+            padding: 20px;
+            box-sizing: border-box;
+            text-align: center;
+        }
+        img {
+            width: 50%;
+            max-width: 200px;
+            height: auto;
+            margin-bottom: 20px;
+            transition: all 0.3s ease;
+        }
+        h1 {
+            color: #333;
+            margin-bottom: 30px;
+            font-size: 1.2rem;
+        }
+        .btn {
+            display: inline-block;
+            width: 40%;
+            max-width: 180px;
+            padding: 15px 0;
+            font-size: 1rem;
+            margin: 10px;
+            border: none;
+            border-radius: 10px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        .yes {
+            background-color: #ff5c8d;
+            color: white;
+        }
+        .no {
+            background-color: #6ca0dc;
+            color: white;
+        }
+        #message {
+            margin-top: 30px;
+            font-size: 1.2rem;
+            color: #ff3b6f;
+            font-weight: bold;
+            position: relative;
+            z-index: 10;
+        }
+        .heart {
+            color: pink;
+            font-size: 1.5rem;
+            display: inline-block;
+            animation: heartbeat 1s infinite;
+        }
+        @keyframes heartbeat {
+            0%   { transform: scale(1); }
+            25%  { transform: scale(1.2); }
+            50%  { transform: scale(1); }
+            75%  { transform: scale(1.2); }
+            100% { transform: scale(1); }
+        }
+        .falling-heart {
+            position: fixed;
+            top: -20px;
+            font-size: 1rem;
+            color: pink;
+            animation: fall linear forwards;
+            z-index: 1;
+        }
+        @keyframes fall {
+            to {
+                transform: translateY(100vh) rotate(360deg);
+                opacity: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <img id="catImg" src="cat.png" alt="小猫">
+
+    <h1 id="title">小猫我爱你，可以做我女朋友吗？</h1>
+    <button class="btn yes" onclick="sayYes()">可以</button>
+    <button class="btn no" onclick="sayNo()">不可以</button>
+
+    <div id="message"></div>
+
+    <script>
+        let noClickCount = 0;
+        let noScale = 1;
+        let yesScale = 1;
+
+        const noTexts = [
+            "你认真的吗？",
+            "要不要再想想？",
+            "不可以选这个！",
+            "我会很伤心( ˃̣̣̥o˂̣̣̥ )",
+            "不行(〒︿〒)"
+        ];
+
+        function sayNo() {
+            const noBtn = document.querySelector(".no");
+            const yesBtn = document.querySelector(".yes");
+            const catImg = document.getElementById("catImg");
+
+            noClickCount++;
+
+            if (noClickCount <= noTexts.length) {
+                noBtn.innerText = noTexts[noClickCount - 1];
+            }
+
+            // 根据点击次数切换图片
+            if (noClickCount === 1 || noClickCount === 2) {
+                catImg.src = "cat_sad.png";
+            } else if (noClickCount >= 3) {
+                catImg.src = "cat_cry.png";
+            }
+
+            // 每次点击都缩小
+            noScale -= 0.1;
+            yesScale += 0.05;
+            if (noScale < 0.1) noScale = 0.1;
+            noBtn.style.transform = `scale(${noScale})`;
+            yesBtn.style.transform = `scale(${yesScale})`;
+        }
+
+        function sayYes() {
+            const messageDiv = document.getElementById("message");
+            const catImg = document.getElementById("catImg");
+            const noBtn = document.querySelector(".no");
+            const yesBtn = document.querySelector(".yes");
+            const title = document.getElementById("title");
+
+            // 替换图片
+            catImg.src = "cat_happy.png";
+            catImg.style.width = "60%";
+            catImg.style.maxWidth = "250px";
+
+            // 隐藏标题和按钮
+            title.style.display = "none";
+            noBtn.style.display = "none";
+            yesBtn.style.display = "none";
+
+            // 显示文案
+            messageDiv.innerHTML = '爱你宝贝，让你成为最幸福的小猫！ <span class="heart">❤</span>';
+
+            // 爱心飘落
+            setInterval(() => {
+                const heart = document.createElement("div");
+                heart.classList.add("falling-heart");
+                heart.innerText = "❤";
+                heart.style.left = Math.random() * 100 + "vw";
+                heart.style.fontSize = (Math.random() * 1.2 + 1) + "rem";
+                heart.style.animationDuration = (Math.random() * 3 + 2) + "s";
+                document.body.appendChild(heart);
+                setTimeout(() => heart.remove(), 5000);
+            }, 300);
+        }
+    </script>
+</body>
+</html>
